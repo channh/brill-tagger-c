@@ -12,4 +12,3 @@ learning_mode=false
 nthreads=8
 iterations=85
 threshold=80
-rules=rules.txt

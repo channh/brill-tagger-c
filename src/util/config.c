@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include "../util/fileio.h"
 #include "../util/config.h"
+
 config_t config;
+
 char *options[15] = {
     "max_line_length",
     "tag_buffer_length",
@@ -23,8 +25,8 @@ char *options[15] = {
     "threshold",
     "rules"
 };
-static int option_number(char * option){
-    printf("HELLO\n");
+
+static int option_number(char * option) {
     if(!option || !*option)
         return -1;
     for(int i = 0; i < sizeof(options); i++){
@@ -35,10 +37,11 @@ static int option_number(char * option){
     }
     return -1;
 }
+
 static void parse_option(char * line, config_t * config) {
-    char *saveptr = NULL;
-    char * option = strtok_r(line, "\":=\t", &saveptr);
-    char * optarg = strtok_r(NULL, "\":=\t", &saveptr);
+    char *ptr;
+    char * option = strtok_r(line, "\":=\t", &ptr);
+    char * optarg = strtok_r(NULL, "\":=\t", &ptr);
     switch(option_number(option)){
         case 0:
             config->max_line_length = atoi(optarg);
@@ -142,6 +145,7 @@ static void parse_option(char * line, config_t * config) {
             exit(EXIT_FAILURE);
     }
 }  
+
 void load_configuration(char * fp) {
     FILE * file = fopen(fp, "r");
     if(file == NULL){
@@ -157,30 +161,22 @@ void load_configuration(char * fp) {
     char contents[numchars];
     int cur = 0;
     fread(contents, numchars, 1, file);
-    
-    char *line;
-    char *saveptr;
 
+    char *line;
+    char *ptr;
     for(int i = 0; i < numlines; i++){
         if(i == 0) {
-            printf("NATHAN\n");
-            line = strtok_r(contents, "\r\n", &saveptr);
-            printf("JEFF\n");
+            line = strtok_r(contents, "\r\n", &ptr);
         }
         else {
-            printf("ALEX\n");
-            line = strtok_r(NULL, "\r\n", &saveptr);
-            printf("ANNE\n");
+            line = strtok_r(NULL, "\r\n", &ptr);
         }
-        if (line == NULL) {
-            printf("Line is NULL\n");
-        }
-        printf("ZACH\n");
         parse_option(line, &config);
-        printf("FAITH\n");
     }  
+
     fclose(file);  
 }
+
 void print_config(){
     if(config.learning_mode){
         printf("----Learning Mode----\n"
