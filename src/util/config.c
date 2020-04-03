@@ -24,6 +24,7 @@ char *options[15] = {
     "rules"
 };
 static int option_number(char * option){
+    printf("HELLO\n");
     if(!option || !*option)
         return -1;
     for(int i = 0; i < sizeof(options); i++){
@@ -34,8 +35,8 @@ static int option_number(char * option){
     }
     return -1;
 }
-static void parse_option(char * line, config_t * config){
-    char *saveptr;
+static void parse_option(char * line, config_t * config) {
+    char *saveptr = NULL;
     char * option = strtok_r(line, "\":=\t", &saveptr);
     char * optarg = strtok_r(NULL, "\":=\t", &saveptr);
     switch(option_number(option)){
@@ -141,10 +142,10 @@ static void parse_option(char * line, config_t * config){
             exit(EXIT_FAILURE);
     }
 }  
-void load_configuration(char * fp){
+void load_configuration(char * fp) {
     FILE * file = fopen(fp, "r");
     if(file == NULL){
-        printf("Could not open config file '%s' (errno %d)\n", fp, errno);
+        printf("Could not open config file '%s'\n%s\n", fp, strerror(errno));
         fclose(file);
         exit(EXIT_FAILURE);
     }
@@ -156,16 +157,29 @@ void load_configuration(char * fp){
     char contents[numchars];
     int cur = 0;
     fread(contents, numchars, 1, file);
+    
     char *line;
     char *saveptr;
+
     for(int i = 0; i < numlines; i++){
-        if(i == 0)
+        if(i == 0) {
+            printf("NATHAN\n");
             line = strtok_r(contents, "\r\n", &saveptr);
-        else 
+            printf("JEFF\n");
+        }
+        else {
+            printf("ALEX\n");
             line = strtok_r(NULL, "\r\n", &saveptr);
+            printf("ANNE\n");
+        }
+        if (line == NULL) {
+            printf("Line is NULL\n");
+        }
+        printf("ZACH\n");
         parse_option(line, &config);
-    }
-    fclose(file);
+        printf("FAITH\n");
+    }  
+    fclose(file);  
 }
 void print_config(){
     if(config.learning_mode){
